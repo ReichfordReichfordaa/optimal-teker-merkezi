@@ -1,145 +1,172 @@
-# Optimal Təkər Mərkəzi — Premium Landing Page
+# Optimal Teker Merkezi
 
-A production-ready, bilingual (AZ/RU) marketing site for a premium tire
-service center in Baku. Built with Next.js 14 (App Router), TypeScript,
-Tailwind CSS, shadcn/ui-pattern primitives, Framer Motion, and Lucide icons.
+This is a bilingual landing page for Optimal Teker Merkezi, a tire service center in Baku.
 
----
+The site is built with Next.js, TypeScript, Tailwind CSS, Framer Motion, and Lucide icons. It supports Azerbaijani and Russian content through locale-based routes.
 
-## 1. Getting started
+## Requirements
 
-This code was authored in an offline sandbox, so dependencies have **not**
-been installed or built here. On your machine, with internet access:
+- Node.js 18.18 or newer
+- npm
+
+## Run Locally
+
+Install dependencies:
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000 → redirects to /az
 ```
+
+Start the development server:
 
 ```bash
-npm run build && npm run start   # production build
-npm run typecheck                # tsc --noEmit
-npm run lint                     # next lint
+npm run dev
 ```
 
-Node.js 18.18+ is required.
+Open:
 
----
-
-## 2. Project structure
-
+```text
+http://localhost:3000/az
 ```
+
+The root route redirects to the preferred language.
+
+## Build
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm run start
+```
+
+## Checks
+
+Run TypeScript checks:
+
+```bash
+npm run typecheck
+```
+
+Run linting:
+
+```bash
+npm run lint
+```
+
+## Main Features
+
+- Azerbaijani and Russian language support
+- Responsive landing page
+- Premium floating header navigation
+- Mobile navigation menu
+- Contact links for phone, WhatsApp, directions, and map
+- SEO metadata, sitemap, robots file, and local business schema
+- Accessible focus states and reduced motion support
+
+## Project Structure
+
+```text
 app/
-  [lang]/               ← locale segment: "az" (default) | "ru"
-    layout.tsx          ← root layout (html/body, fonts, JSON-LD, header/footer)
-    page.tsx            ← assembles all sections for the home page
-    opengraph-image.tsx ← dynamically generated OG/Twitter card per locale
-    not-found.tsx        ← localized 404
+  [lang]/
+    layout.tsx
+    page.tsx
+    not-found.tsx
+    opengraph-image.tsx
   globals.css
-  icon.svg              ← favicon (Next.js file convention)
-  sitemap.ts            ← /sitemap.xml (both locales, hreflang alternates)
-  robots.ts             ← /robots.txt
-middleware.ts           ← redirects "/" to the preferred locale (az/ru)
+  sitemap.ts
+  robots.ts
 
 components/
-  layout/                header.tsx, footer.tsx, language-switcher.tsx
-  sections/               hero, about, services, why-choose-us, gallery,
-                          reviews, contact — one file per landing section
-  shared/                 logo.tsx, alignment-reticle.tsx (signature motif),
-                          reveal.tsx (scroll animation), section-heading.tsx,
-                          tread-divider.tsx, floating-actions.tsx (mobile
-                          call/WhatsApp bar)
-  ui/                     button.tsx, card.tsx, badge.tsx — shadcn-pattern
-                          primitives (cva-based variants)
+  layout/
+    header.tsx
+    footer.tsx
+    language-switcher.tsx
+  sections/
+    about.tsx
+    contact.tsx
+    gallery.tsx
+    hero.tsx
+    reviews.tsx
+    services.tsx
+    why-choose-us.tsx
+  shared/
+  ui/
 
 lib/
   i18n/
-    config.ts             locale list, default locale, guards
-    types.ts               the `Dictionary` type — the contract every
-                          locale file must satisfy
-    dictionaries/az.ts     Azerbaijani copy (primary)
-    dictionaries/ru.ts     Russian copy (secondary)
-    get-dictionary.ts      server-only dictionary loader
-  constants.ts             phone numbers, WhatsApp, address, map links —
-                          the single source of truth for contact info
-  seo.ts                   schema.org AutomotiveBusiness JSON-LD generator
-  utils.ts                 `cn()` className merge helper
+    config.ts
+    dictionaries/
+    get-dictionary.ts
+    types.ts
+  constants.ts
+  seo.ts
+  utils.ts
 ```
 
-**Adding a third language** (e.g. English) means: add `"en"` to
-`lib/i18n/config.ts`, add `lib/i18n/dictionaries/en.ts` satisfying the
-`Dictionary` type, and register it in `get-dictionary.ts`. No component
-changes required — every section reads only from the dictionary.
+## Languages
 
----
+Supported locales:
 
-## 3. Design system (why it looks the way it does)
+- `az`
+- `ru`
 
-**Palette** — obsidian black, off-white canvas, graphite grays, and a
-single warm accent, "Optimal Orange" (`#FF5A1F`) — the color of a torque
-mark. A hairline of diagnostic blue is reserved for focus rings only, per
-the brief's "very small amount of blue if needed."
+To add a new language:
 
-**Typography** — Golos Text (display, geometric, full Cyrillic support)
-paired with Inter (body, highly legible in both AZ and RU). Large,
-tight-tracked display sizes on the hero; a restrained type scale
-elsewhere.
+1. Add the locale to `lib/i18n/config.ts`.
+2. Add a dictionary file in `lib/i18n/dictionaries/`.
+3. Register the dictionary in `lib/i18n/get-dictionary.ts`.
+4. Make sure the new dictionary follows the `Dictionary` type in `lib/i18n/types.ts`.
 
-**Signature element** — the brand mark and the large ambient graphic in
-the hero are both built from the same idea: a segmented ring with a
-single accent tick, echoing a **Hunter Road Force Elite alignment
-readout**. It's used in the logo, the hero background, and the tread-mark
-divider in "Why Choose Us" — one consistent, subject-specific motif rather
-than decoration for its own sake.
+## Contact Data
 
-**Placeholders** — Gallery and background imagery are intentionally
-art-directed gradients (not gray boxes) so the site never looks broken
-before real photography is dropped in. See `public/images/README.md` for
-where to add real assets.
+Business contact information is stored in:
 
----
+```text
+lib/constants.ts
+```
 
-## 4. SEO checklist (already implemented)
+Update this file when phone numbers, map links, address, email, or opening hours change.
 
-- Per-locale `<title>`, meta description, canonical + `hreflang` alternates
-- Dynamic Open Graph / Twitter card images (`opengraph-image.tsx`, no
-  static asset dependency)
-- `schema.org` `AutomotiveBusiness` JSON-LD (address, phone, hours,
-  services, brands) in `lib/seo.ts`
-- Semantic headings (`h1` in hero, `h2` per section), landmark elements
-  (`header`, `main`, `footer`, `nav`)
-- `sitemap.xml` and `robots.txt` via Next.js file conventions
-- `next/font` with `display: swap` for both Latin and Cyrillic subsets
+## SEO
 
-**Before launch:**
-1. Replace the approximate coordinates in `lib/constants.ts` (`GEO`) with
-   the exact rooftop lat/lng from Google Business Profile.
-2. Replace `info@optimaltekar.az` with the real email address.
-3. Verify `SITE_URL` in `lib/constants.ts` once the domain is live, and
-   submit `sitemap.xml` to Google Search Console.
-4. Swap gallery/hero placeholders for real photography (see §3).
+The project includes:
 
----
+- Per-language page metadata
+- Canonical and alternate language URLs
+- Open Graph image route
+- `sitemap.xml`
+- `robots.txt`
+- Local business JSON-LD schema
 
-## 5. Accessibility & performance
+Before launch, confirm:
 
-- Visible focus rings (`:focus-visible`) on every interactive element
-- `prefers-reduced-motion` respected globally (animations collapse to
-  near-instant)
-- Semantic landmarks and descriptive `aria-label`s on icon-only controls
-- System font stacks as fallbacks; fonts load with `swap` (no invisible
-  text)
-- No client JS on sections that don't need it — `Hero`, `Header`, and
-  `Reveal` are the only client components; everything else renders on the
-  server
-- Images (once added) should use `next/image` for automatic AVIF/WebP and
-  lazy loading — `next.config.mjs` is already configured for it
+- The final production domain in `lib/constants.ts`
+- The exact business address
+- The correct phone numbers
+- The correct email address
+- The exact map coordinates
+- Real business photos, if available
 
----
+## Design Notes
 
-## 6. What's intentionally out of scope
+The visual system uses a dark base, off-white surfaces, graphite tones, and a warm orange accent. The header is intentionally minimal, floating, and glass-like. The hero section is kept unchanged.
 
-Per the brief: no authentication, dashboard, admin panel, payments,
-product catalog, database, or CMS. This is a static marketing page. The
-Google Maps embed uses an unauthenticated `google.com/maps?q=...&output=embed`
-URL, so no API key or billing account is required.
+The site should feel clear, direct, and premium without unnecessary decoration.
+
+## Scope
+
+This project is a marketing website. It does not include:
+
+- Admin panel
+- Authentication
+- Payment system
+- Database
+- Product catalog
+- CMS
+
